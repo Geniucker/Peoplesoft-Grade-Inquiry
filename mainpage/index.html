@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Home</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="index.css">
+        <!-- JS -->
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Peoplesoft Grades Inquery</h1>
+        </div>
+        <form action="/grade" method="get">
+            <div class="first" id="first">
+                <label>Choose a method:</label>
+                <input type="radio" name="choice" value="1">1
+                <input type="radio" name="choice" value="2" checked>本学期各科成绩
+                <input type="radio" name="choice" value="3">3
+                <input type="radio" name="choice" value="4">4
+            </div>
+            <div class="second" id="second">
+                <label>Username:</label>
+                <input type="text" name="username">
+                <label>Password:</label>
+                <input type="password" name="password">
+            </div>
+            <div>
+                <input type="submit" value="Submit">
+            </div>
+            <div>
+                <p>P.S. After pressing submit, you may need to wait for about 15s.</p>
+            </div>
+        </form>
+    
+</html>
