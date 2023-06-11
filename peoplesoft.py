@@ -44,26 +44,28 @@ class User:
             self.login()
         
         driver = self.__driver
-        driver.get("https://scrsprd.zju.edu.cn/psc/CSPRD_newwin/EMPLOYEE/HRMS/c/SSR_STUDENT_ACAD_REC_FL.SSR_ACAD_REC_FL.GBL")
 
-        choices = [
-            "win1sidedivSCC_NAV_TAB_row$0",
-            "win1sidedivSCC_NAV_TAB_row$1",
-            "win1sidedivSCC_NAV_TAB_row$2",
-            "win1sidedivSCC_NAV_TAB_row$3",
-        ]
+        if choice == 1 or choice == 2:
+            driver.get("https://scrsprd.zju.edu.cn/psc/CSPRD_newwin/EMPLOYEE/HRMS/c/SSR_STUDENT_ACAD_REC_FL.SSR_ACAD_REC_FL.GBL")
 
-        # enter the selected page
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, choices[choice-1]))
-        ).click()
+            choices = [
+                "win1sidedivSCC_NAV_TAB_row$0",
+                "win1sidedivSCC_NAV_TAB_row$1",
+                "win1sidedivSCC_NAV_TAB_row$2",
+                "win1sidedivSCC_NAV_TAB_row$3",
+            ]
+
+            # click the item in menu and enter the selected page
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, choices[choice-1]))
+            ).click()
 
         if choice == 2:
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, ".ps_grid-row.psc_rowact"))
             )
             choices = driver.find_elements(By.CSS_SELECTOR, ".ps_grid-row.psc_rowact")
-            choices[0].click()
+            choices[1].click()
 
             # get cources
             WebDriverWait(driver, 10).until(
@@ -81,5 +83,29 @@ class User:
                     "grade_points": items[5].text
                 }
             return cources
-        elif choice == 3 or choice == 4:
-            return driver.execute_script("return document.documentElement.outerHTML")
+        elif choice == 3:
+            driver.get("https://scrsprd.zju.edu.cn/psc/CSPRD_1/EMPLOYEE/HRMS/c/CST_TSCP_MENU.TZ_TPGPA_STD.GBL")
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "win1divACAD_PLAN_TBL_DESCR"))
+            )
+            result = {
+                "Plan": driver.find_element(By.ID, "win1divACAD_PLAN_TBL_DESCR").text,
+                "Admit Term": driver.find_element(By.ID, "win1divTERM_VAL_TBL_DESCR").text,
+                "Cumulative GPA": driver.find_element(By.ID, "win1divCST_ST_TPGPA_WK_CST_CUM_TPGPA").text,
+                "ZJU GPA（exclude UIUC courses）": driver.find_element(By.ID, "win1divCST_ST_TPGPA_WK_TZ_EX_UIUC_TPGPA").text
+            }
+            return result
+        elif choice == 4:
+            driver.get("https://scrsprd.zju.edu.cn/psc/CSPRD_1/EMPLOYEE/HRMS/c/CST_GRD_MENU.TZ_STU_RANK_COM.GBL")
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "PSLEVEL1GRID"))
+            )
+            items = driver.find_elements(By.CSS_SELECTOR, "[id^=trCST_STD_PLAN_VW]")[0].find_elements(By.CLASS_NAME, "PSLEVEL1GRIDODDROW")
+            result = {
+                "Plan": driver.find_element(By.ID, "win1divACAD_PLAN_TBL_DESCR").text,
+                "Current Grade": items[0].text,
+                "Number of students in the current grade and major": items[1].text,
+                "Cumulative GPA": items[2].text,
+                "Rank": items[3].text
+            }
+            return result
